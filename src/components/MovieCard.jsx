@@ -1,59 +1,77 @@
-import { ArrowUpRight, CalendarDays, ImageOff, Star } from "lucide-react";
+import { CalendarDays, Eye, Heart, ImageOff, Star } from "lucide-react";
+import useFavorites from "../context/useFavorites";
 
 const MovieCard = ({ movie, onDetails }) => {
+  const { isFavorite, toggleFavorite } = useFavorites();
   const image = movie.image?.medium || movie.image?.original;
   const year = movie.premiered ? movie.premiered.slice(0, 4) : "N/A";
   const rating = movie.rating?.average ?? "N/A";
-  const genre = movie.genres?.[0] || "Show";
+  const saved = isFavorite(movie.id);
 
   return (
-    <article className="group relative overflow-hidden rounded-[1.45rem] border border-white/[0.07] bg-[#111117] shadow-[0_18px_50px_rgba(0,0,0,.25)] transition duration-300 hover:-translate-y-1.5 hover:border-violet-400/25 hover:shadow-[0_24px_70px_rgba(76,29,149,.18)]">
+    <article className="group overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/75 shadow-xl shadow-black/10 transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-violet-950/30">
       <div className="relative aspect-[2/3] overflow-hidden bg-zinc-900">
         {image ? (
           <img
             src={image}
             alt={`${movie.name} poster`}
             loading="lazy"
-            className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.06]"
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="grid h-full place-items-center bg-gradient-to-br from-violet-950/70 to-zinc-950 text-zinc-600">
+          <div className="grid h-full place-items-center text-zinc-500">
             <div className="text-center">
-              <ImageOff className="mx-auto mb-2" />
-              <span className="text-xs">No poster</span>
+              <ImageOff className="mx-auto mb-2" aria-hidden="true" />
+              <span className="text-sm">No poster</span>
             </div>
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b10] via-transparent to-transparent opacity-90" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-zinc-950 via-zinc-950/55 to-transparent" />
 
-        <div className="absolute left-3 top-3 rounded-full border border-white/10 bg-black/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/80 backdrop-blur-md">
-          {genre}
-        </div>
-
-        <div className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full border border-amber-300/15 bg-black/55 px-2.5 py-1 text-xs font-bold text-amber-300 backdrop-blur-md">
-          <Star size={12} className="fill-amber-300" /> {rating}
-        </div>
+        <button
+          type="button"
+          onClick={() => toggleFavorite(movie)}
+          aria-label={saved ? `Remove ${movie.name} from favorites` : `Add ${movie.name} to favorites`}
+          aria-pressed={saved}
+          className={`absolute right-3 top-3 grid h-11 w-11 place-items-center rounded-xl border backdrop-blur transition ${
+            saved
+              ? "border-pink-400/50 bg-pink-500 text-white"
+              : "border-white/15 bg-black/65 text-white hover:bg-violet-600"
+          }`}
+        >
+          <Heart size={19} fill={saved ? "currentColor" : "none"} aria-hidden="true" />
+        </button>
       </div>
 
-      <div className="relative -mt-10 p-4 pt-0 sm:p-5 sm:pt-0">
-        <div className="rounded-2xl border border-white/[0.06] bg-[#111117]/90 p-4 shadow-xl shadow-black/20 backdrop-blur-xl">
-          <h3 className="line-clamp-1 text-base font-bold tracking-tight text-white sm:text-lg">{movie.name}</h3>
-          <div className="mt-2 flex items-center justify-between gap-3 text-xs text-zinc-500 sm:text-sm">
-            <span className="flex items-center gap-1.5">
-              <CalendarDays size={14} className="text-violet-400" /> {year}
-            </span>
-            <span className="truncate">{movie.language || "Unknown"}</span>
-          </div>
+      <div className="p-4">
+        {movie.genres?.[0] ? (
+          <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] text-violet-300">
+            {movie.genres[0]}
+          </p>
+        ) : null}
 
-          <button
-            type="button"
-            onClick={() => onDetails(movie)}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-2.5 text-sm font-bold text-violet-200 transition hover:border-violet-400/35 hover:bg-violet-500/20 hover:text-white"
-          >
-            See Details <ArrowUpRight size={16} />
-          </button>
+        <h3 className="line-clamp-1 text-lg font-bold text-white">{movie.name}</h3>
+
+        <div className="mt-2 flex items-center justify-between gap-3 text-sm text-zinc-300">
+          <span className="flex items-center gap-1.5" aria-label={`Rating ${rating}`}>
+            <Star size={15} className="text-amber-300" aria-hidden="true" />
+            {rating}
+          </span>
+          <span className="flex items-center gap-1.5" aria-label={`Premiere year ${year}`}>
+            <CalendarDays size={15} aria-hidden="true" />
+            {year}
+          </span>
         </div>
+
+        <button
+          type="button"
+          onClick={() => onDetails(movie)}
+          className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-violet-500 active:translate-y-px"
+        >
+          <Eye size={17} aria-hidden="true" />
+          See details
+        </button>
       </div>
     </article>
   );

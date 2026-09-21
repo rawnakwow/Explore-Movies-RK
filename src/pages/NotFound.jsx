@@ -1,23 +1,31 @@
-import { ArrowLeft, Clapperboard } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import { Link } from "react-router";
 
 const NotFound = () => {
   return (
-    <section className="relative grid min-h-[72vh] place-items-center overflow-hidden px-4 text-center">
-      <div className="absolute left-1/2 top-1/2 -z-10 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/15 blur-3xl" />
+    <section className="grid min-h-[70vh] place-items-center px-4 py-16 text-center">
       <div className="max-w-lg">
-        <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-violet-400/20 bg-violet-500/10 text-violet-300">
-          <Clapperboard size={25} />
+        <p className="text-7xl font-black text-violet-400">404</p>
+        <h1 className="mt-3 text-3xl font-black text-white">Page not found</h1>
+        <p className="mt-3 leading-7 text-zinc-300">
+          The page you are looking for does not exist. Return home or jump straight into the movie library.
+        </p>
+        <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+          <Link
+            to="/"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-2.5 font-semibold text-white hover:bg-violet-500"
+          >
+            <ArrowLeft size={18} aria-hidden="true" />
+            Back home
+          </Link>
+          <Link
+            to="/movies"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-5 py-2.5 font-semibold text-zinc-100 hover:bg-white/5"
+          >
+            <Search size={18} aria-hidden="true" />
+            Browse movies
+          </Link>
         </div>
-        <p className="mt-5 bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-7xl font-black tracking-[-0.06em] text-transparent">404</p>
-        <h1 className="mt-3 text-3xl font-black tracking-tight text-white">This scene does not exist.</h1>
-        <p className="mx-auto mt-3 max-w-md leading-7 text-zinc-500">The page you are looking for may have moved, or the link may be incorrect.</p>
-        <Link
-          to="/"
-          className="mt-7 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-violet-950/30 hover:-translate-y-0.5"
-        >
-          <ArrowLeft size={17} /> Back Home
-        </Link>
       </div>
     </section>
   );
